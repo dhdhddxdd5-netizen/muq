@@ -34,7 +34,7 @@ RUN echo "=== Verifying dalal_project module ===" && \
     echo "✓ dalal_project directory exists" && \
     python -c "import dalal_project; print('✓ dalal_project imported successfully')" && \
     python -c "from dalal_project import wsgi; print('✓ dalal_project.wsgi imported successfully')" && \
-    python -c "from dalal_project import urls; print('✓ dalal_project.urls imported successfully')" && \
+    python -c "import django; django.setup(); from dalal_project import urls; print('✓ dalal_project.urls imported successfully')" && \
     echo "=== All modules verified ===" || exit 1
 
 # Collect static files
