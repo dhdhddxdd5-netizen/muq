@@ -21,16 +21,29 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Allow Railway domains and localhost
 ALLOWED_HOSTS = [
-    'localhost',
+    '.up.railway.app',
     '127.0.0.1',
+    'localhost',
     '0.0.0.0',
-    '*.up.railway.app',
-    '*.railway.app',
 ]
 
 # Add any custom domains from environment
 if os.getenv('ALLOWED_HOSTS'):
-    ALLOWED_HOSTS.extend(os.getenv('ALLOWED_HOSTS', '').split(','))
+    custom_hosts = os.getenv('ALLOWED_HOSTS', '').split(',')
+    ALLOWED_HOSTS.extend([h.strip() for h in custom_hosts if h.strip()])
+
+# CSRF Configuration for Railway
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.up.railway.app',
+    'https://*.railway.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
+# Add custom CSRF origins from environment
+if os.getenv('CSRF_TRUSTED_ORIGINS'):
+    custom_origins = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+    CSRF_TRUSTED_ORIGINS.extend([o.strip() for o in custom_origins if o.strip()])
 
 # Application definition
 INSTALLED_APPS = [

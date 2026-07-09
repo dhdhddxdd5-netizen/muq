@@ -1,6 +1,4 @@
 FROM python:3.12-slim-bullseye
-# FORCE REBUILD TIMESTAMP: 2026-07-09 12:02:30
-# This timestamp forces Docker to rebuild every time
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
