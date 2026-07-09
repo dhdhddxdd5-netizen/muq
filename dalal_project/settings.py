@@ -19,7 +19,31 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me-in-production')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+# Allow Railway domains and localhost
+ALLOWED_HOSTS = [
+    '.up.railway.app',
+    '127.0.0.1',
+    'localhost',
+    '0.0.0.0',
+]
+
+# Add any custom domains from environment
+if os.getenv('ALLOWED_HOSTS'):
+    custom_hosts = os.getenv('ALLOWED_HOSTS', '').split(',')
+    ALLOWED_HOSTS.extend([h.strip() for h in custom_hosts if h.strip()])
+
+# CSRF Configuration for Railway
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.up.railway.app',
+    'https://*.railway.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
+# Add custom CSRF origins from environment
+if os.getenv('CSRF_TRUSTED_ORIGINS'):
+    custom_origins = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+    CSRF_TRUSTED_ORIGINS.extend([o.strip() for o in custom_origins if o.strip()])
 
 # Application definition
 INSTALLED_APPS = [
@@ -142,3 +166,4 @@ else:
             'LOCATION': 'unique-snowflake',
         }
     }
+

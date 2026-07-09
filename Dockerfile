@@ -1,6 +1,4 @@
 FROM python:3.12-slim-bullseye
-# FORCE REBUILD TIMESTAMP: 2026-07-09 12:02:30
-# This timestamp forces Docker to rebuild every time
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -34,7 +32,7 @@ RUN echo "=== Verifying dalal_project module ===" && \
     echo "✓ dalal_project directory exists" && \
     python -c "import dalal_project; print('✓ dalal_project imported successfully')" && \
     python -c "from dalal_project import wsgi; print('✓ dalal_project.wsgi imported successfully')" && \
-    python -c "from dalal_project import urls; print('✓ dalal_project.urls imported successfully')" && \
+    python -c "import django; django.setup(); from dalal_project import urls; print('✓ dalal_project.urls imported successfully')" && \
     echo "=== All modules verified ===" || exit 1
 
 # Collect static files
@@ -45,3 +43,4 @@ EXPOSE 8080
 
 # Run the application
 CMD ["python", "run_server.py"]
+
