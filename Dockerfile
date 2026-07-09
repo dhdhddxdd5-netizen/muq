@@ -1,5 +1,5 @@
 FROM python:3.12-slim-bullseye
-# Force rebuild - 2026-07-05-13-38 - channel_users fix
+# Force rebuild - 2026-07-09 - Fix module import issues
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -24,10 +24,10 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Copy application code
+# Copy application code BEFORE collectstatic
 COPY . .
 
-# Collect static files
+# Collect static files (now that code is present)
 RUN python manage.py collectstatic --noinput || true
 
 # Expose port
