@@ -1,5 +1,5 @@
 FROM python:3.12-slim-bullseye
-# Force rebuild - 2026-07-09 - Fix module import issues
+# Force rebuild - 2026-07-09 12:01 - Complete module structure fix (v2)
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -24,10 +24,14 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Copy application code BEFORE collectstatic
+# Copy ALL application code (including dalal_project package)
 COPY . .
 
-# Collect static files (now that code is present)
+# Verify dalal_project exists
+RUN ls -la /app/dalal_project/ && \
+    python -c "import dalal_project; print('✓ dalal_project imported successfully')"
+
+# Collect static files
 RUN python manage.py collectstatic --noinput || true
 
 # Expose port
