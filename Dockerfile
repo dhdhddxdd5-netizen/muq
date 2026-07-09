@@ -1,5 +1,6 @@
 FROM python:3.12-slim-bullseye
-# Force rebuild - 2026-07-09 12:01 - Complete module structure fix (v2)
+# FORCE REBUILD TIMESTAMP: 2026-07-09 12:02:30
+# This timestamp forces Docker to rebuild every time
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -24,12 +25,17 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Copy ALL application code (including dalal_project package)
+# Copy ALL application code
 COPY . .
 
-# Verify dalal_project exists
-RUN ls -la /app/dalal_project/ && \
-    python -c "import dalal_project; print('✓ dalal_project imported successfully')"
+# Verify the dalal_project module exists and is importable
+RUN echo "=== Verifying dalal_project module ===" && \
+    ls -la /app/dalal_project/ && \
+    echo "✓ dalal_project directory exists" && \
+    python -c "import dalal_project; print('✓ dalal_project imported successfully')" && \
+    python -c "from dalal_project import wsgi; print('✓ dalal_project.wsgi imported successfully')" && \
+    python -c "from dalal_project import urls; print('✓ dalal_project.urls imported successfully')" && \
+    echo "=== All modules verified ===" || exit 1
 
 # Collect static files
 RUN python manage.py collectstatic --noinput || true
